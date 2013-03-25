@@ -21,11 +21,11 @@ end
 compile '/blog/*' do
   if item[:content_filename] =~ /\/index.*$/ 
     filter :erb
-    filter :relativize_paths, :type => :html
+    # filter :relativize_paths, :type => :html
     layout 'blog'
   else
     filter :kramdown
-    filter :relativize_paths, :type => :html
+    # filter :relativize_paths, :type => :html
     layout 'post'
   end
 end

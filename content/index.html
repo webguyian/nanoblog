@@ -3,7 +3,7 @@ title: nanoblog
 ---
 <% sorted_articles.each do |post| %>
 <div class='post'>
-	<h1><%= link_to post[:title], '/blog' + post.path %></h1>
+	<h1><%= link_to post[:title], post.path %></h1>
 	<article>
 		<%= post.compiled_content %>
 	</article>
