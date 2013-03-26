@@ -39,14 +39,14 @@ compile '*' do
   end
 end
 
-# static_pages = ['/about/', '/contact/', '/archive/']
+static_pages = ['/about/', '/contact/']
 is_index = /\/index.*$/ 
 
-# static_pages.each do |page|
-#   route page do
-#     page.chop + '.html'
-#   end
-# end
+static_pages.each do |page|
+  route page do
+    page.chop + '.html'
+  end
+end
 
 route '/css/*' do
   item.identifier.chop + '.css'
