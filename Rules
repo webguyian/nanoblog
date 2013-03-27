@@ -13,14 +13,19 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
+static_pages = ['/about/', '/contact/']
+is_index = /\/index.*$/ 
+is_main = /\/style.*$/
+
 compile '/css/*' do
   # don’t filter or layout
     # filter :relativize_paths, :type => :css
 end
 
+
 compile '/blog/*' do
-  if item[:content_filename] =~ /\/index.*$/ 
-    filter :erb
+    if item[:content_filename] =~ is_index
+      filter :erb
     # filter :relativize_paths, :type => :html
     layout 'blog'
   else
@@ -39,9 +44,6 @@ compile '*' do
   end
 end
 
-static_pages = ['/about/', '/contact/']
-is_index = /\/index.*$/ 
-
 static_pages.each do |page|
   route page do
     page.chop + '.html'
@@ -49,7 +51,11 @@ static_pages.each do |page|
 end
 
 route '/css/*' do
-  item.identifier.chop + '.css'
+  if item[:content_filename] =~ is_main
+    item.identifier.chop + '.min.css'
+  else
+    nil
+  end
 end
 
 route '/blog/*' do
@@ -63,9 +69,9 @@ route '*' do
   elsif
     item[:content_filename] =~ is_index 
     item.identifier + 'index.html' 
-  # else 
-  #  item.identifier.chop + '.html'
-  end
+  else 
+   item.identifier.chop + '.html'
+ end
 end
 
 layout '*', :erb

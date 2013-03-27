@@ -19,10 +19,28 @@ header {
 }
 
 nav {
+  position: relative;
   float: right;
 }
 
-nav a:after {
+nav>.home, nav>.home:hover {
+  display: block;
+  position: absolute;
+  top: -2px;
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  background: url('../img/sprite.png') no-repeat;
+}
+nav>.home {
+  text-indent: -9999px;
+  background: url(../img/icon-home.png) no-repeat 0 0;
+}
+nav>.home:hover {
+  background-position: 0 -20px;
+}
+
+nav a:before {
   color: #e0e9ee;
   content: '\25A0';
   font-size: 10px;

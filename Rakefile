@@ -54,7 +54,7 @@ task :generate => :clean do
 end
 
 desc "build and commit the website in the master branch"
-task :build => :generate_all do
+task :commit => :generate_all do
   require 'git'
   repo = Git.open('.')
   repo.branch("master").checkout
@@ -137,6 +137,48 @@ task :sitemap => :generate do
   end
 end
 
+namespace :minifier do
+
+  JAR = "~/Resources/lib/yuicompressor/yuicompressor.jar"
+  CSS_PATH = "~/Projects/nanoc/blog/content/css/"
+
+  def minify(files)
+    files.each do |file|
+      next if file =~ /\.min\.(js|css)/
+      
+      minfile = file.sub(/\.js$/, ".min.js").sub(/\.css$/, ".min.css")
+
+      cmd = "java -jar #{JAR} #{file} -o #{minfile}"
+      puts cmd
+      ret = system(cmd)
+      raise "Minification failed for #{file}" if !ret
+    end
+  end
+
+  desc "minify"
+  task :minify => [:minify_js, :minify_css]
+
+  desc "minify javascript"
+  task :minify_js do
+    minify(FileList['content/js/**/*.js'])
+  end
+
+  desc "minify css"
+  task :minify_css do
+    minify(FileList['content/css/**/*.css'])
+  end
+
+
+  desc "combine and minify css"
+  task :compress_css do
+    puts system("if [ -e ./content/css/style.min.css ]; then rm ./content/css/style.min.css; fi")
+    puts ">>> Combining CSS files... <<<"
+    puts system("cat #{CSS_PATH}*.css > #{CSS_PATH}style.min.css")
+    puts system("java -jar #{JAR} ./content/css/style.min.css -o ./content/css/style.min.css;")
+    puts ">>> CSS successfully minified! <<<"
+  end
+
+end
 
 desc "Generate the whole site."
 task :generate_all => [:generate, :sitemap]
