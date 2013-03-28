@@ -18,13 +18,15 @@ is_index = /\/index.*$/
 is_main = /\/style.*$/
 
 compile '/css/*' do
-  # don’t filter or layout
     # filter :relativize_paths, :type => :css
+end
+
+compile '/CNAME/' do
 end
 
 
 compile '/blog/*' do
-    if item[:content_filename] =~ is_index
+  if item[:content_filename] =~ is_index
       filter :erb
     # filter :relativize_paths, :type => :html
     layout 'blog'
@@ -50,6 +52,10 @@ static_pages.each do |page|
   end
 end
 
+route '/CNAME/' do
+  '/CNAME'
+end
+
 route '/css/*' do
   if item[:content_filename] =~ is_main
     item.identifier.chop + '.min.css'
@@ -71,7 +77,7 @@ route '*' do
     item.identifier + 'index.html' 
   else 
    item.identifier.chop + '.html'
- end
+  end
 end
 
 layout '*', :erb
