@@ -40,6 +40,23 @@ task :new_post, :title do |t, args|
   end
 end
 
+  desc "start up an instance of server on the output files"
+  task :start_server do
+      print "Starting server..."
+      ok_failed system("nanoc view")
+  end
+
+  desc "stop all instances of server"
+  task :stop_server do
+    pid = `ps auxw | awk '/bin\\/serve\\ #{port}/ { print $2 }'`.strip
+    if pid.empty?
+      puts "Server is not running"
+    else
+      print "Stoping server..."
+      ok_failed system("kill -9 #{pid}")
+    end
+  end
+
 desc "remove files in output directory"
 task :clean do
   puts "Removing output..."
@@ -49,7 +66,7 @@ end
 desc "generate website in output directory"
 task :generate => :clean do
   puts "Generating website..."
-  system "nanoc co"
+  system "nanoc compile"
   # system "mv _site/blog/atom.html _site/blog/atom.xml"
 end
 
@@ -74,7 +91,7 @@ task :deploy => :build do
 end
 
 desc "preview the site in a web browser"
-multitask :preview => [:generate, :start_serve] do
+multitask :preview => [:generate, :start_server] do
   system "open http://localhost:#{port}/"
 end
 
@@ -168,7 +185,6 @@ end
     puts system("java -jar #{JAR} ./content/css/style.min.css -o ./content/css/style.min.css;")
     puts ">>> CSS successfully minified! <<<"
   end
-
 
 desc "Generate the whole site."
 task :generate_all => [:compress_css, :generate, :sitemap]
