@@ -1,7 +1,7 @@
 <% render 'blog' do %>
 <article class='post'>
 	<h1><%= item[:title] %></h1>
-	<span>Posted on: <%= get_pretty_date(item) %></span>
+	<p class="date"><%= get_pretty_date(item) %></p>
 	<%= yield %>
 </article>
 <% end %>

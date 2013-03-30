@@ -1,8 +1,8 @@
 begin
   require 'nanoc3/tasks'
-rescue LoadError
-  require 'rubygems'
   require 'stringex'
+  require 'rubygems'
+rescue LoadError
 end
 
 
@@ -33,7 +33,7 @@ task :new_post, :title do |t, args|
   open(filename, 'w') do |post|
     post.puts '---'
     post.puts "title: \"#{title}\""
-    post.puts "created_at: #{Time.now}"
+    post.puts "created_at: \"#{Time.now}\""
     post.puts 'kind: article'
     post.puts 'publish: false'
     post.puts "---\n\n"
@@ -63,9 +63,9 @@ task :commit => :generate_all do
   rm_rf(site)
   Dir["**/*"].each {|f| repo.add(f) }
   repo.status.deleted.each {|f, s| repo.remove(f)}
-  message = ENV["MESSAGE"] || "Site updated at #{Time.now.utc}"
+  message = ENV["MESSAGE"] || "Site updated at #{Time.now}"
   repo.commit(message)
-  repo.branch("source").checkout
+  repo.branch("gh-pages").checkout
 end
 
 desc "generate and deploy website"
@@ -93,13 +93,6 @@ task :watch do
     delete {|base, relative| rebuild_site(relative)}
     create {|base, relative| rebuild_site(relative)}
   end
-end
-
-def departialize(target)
-  if (bn = File.basename(target))[0..0] == "_"
-    target = file.join(file.dirname(target), bn[1..-1])
-  end
-  target
 end
 
 desc "Build an XML sitemap of all html files."
@@ -136,8 +129,6 @@ task :sitemap => :generate do
     puts "Created #{site}/sitemap.xml"
   end
 end
-
-namespace :minifier do
 
   JAR = "~/Resources/lib/yuicompressor/yuicompressor.jar"
   CSS_PATH = "~/Projects/nanoc/blog/content/css/"
@@ -178,9 +169,8 @@ namespace :minifier do
     puts ">>> CSS successfully minified! <<<"
   end
 
-end
 
 desc "Generate the whole site."
-task :generate_all => [:generate, :sitemap]
+task :generate_all => [:compress_css, :generate, :sitemap]
 
 task :build => :generate_all

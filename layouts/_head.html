@@ -6,10 +6,11 @@
 <head>
 	<meta charset="utf-8">
 	<title>web·guy·ian » <%= @item[:title] %></title>
-	<meta name="description" content="">
-	<meta name="author" content="Ian Mac">
+	<meta name="description" content="<%= @item[:description] %>">
+	<meta name="author" content="Web Guy Ian">
 	<meta name="generator" content="nanoc <%= Nanoc::VERSION %>"> 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/style.min.css">
   <link rel="stylesheet" href="/css/font-awesome.min.css">
 	<!--[if lt IE 9]>
@@ -19,5 +20,5 @@
 <body>
 	<div class="container">
 		<header>
-			<nav><a class="home" href="http://webguyian.com">Home</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="#">Archive</a></nav>
+			<nav><a class="home" href="http://webguyian.com">Home</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/archive.html">Archive</a></nav>
 		</header>

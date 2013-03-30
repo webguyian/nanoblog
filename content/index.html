@@ -3,9 +3,8 @@ title: nanoblog
 ---
 <% sorted_articles.each do |post| %>
 <div class='post'>
-	<h1><%= link_to post[:title], post.path %></h1>
-	<article>
+	<h1><%= link_to post[:title], post[:link] || post.path, target: "_blank" %><%= link_to '&#9632;', post.path, class: "permalink", title: "Permalink to \"#{post[:title]}\"" %>
+</h1>
 		<%= post.compiled_content %>
-	</article>
 </div>
 <% end %>

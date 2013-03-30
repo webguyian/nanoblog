@@ -13,18 +13,17 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-static_pages = ['/about/', '/contact/']
+preprocess do
+  # authors may unpublish items by setting meta attribute publish: false
+  items.delete_if { |item| item[:publish] == false }
+end
+
+static_pages = ['/about/', '/contact/', '/archive/']
 is_index = /\/index.*$/ 
 is_main = /\/style.*$/
 
-compile '/css/*' do
-    # filter :relativize_paths, :type => :css
-end
-
-compile '/CNAME/' do
-end
-
-
+########################################
+## Blog
 compile '/blog/*' do
   if item[:content_filename] =~ is_index
       filter :erb
@@ -37,14 +36,13 @@ compile '/blog/*' do
   end
 end
 
-compile '*' do
-  if item.binary?
-    # don’t filter binary items
-  else
-    filter :erb
-    layout 'default'
-  end
+route '/blog/*' do
+  # item.identifier.chop + '.html'
+    item.identifier + "index.html"
 end
+
+########################################
+## Static
 
 static_pages.each do |page|
   route page do
@@ -52,8 +50,18 @@ static_pages.each do |page|
   end
 end
 
+compile '/CNAME/' do
+end
+
 route '/CNAME/' do
   '/CNAME'
+end
+
+########################################
+## General
+
+compile '/css/*' do
+    # filter :relativize_paths, :type => :css
 end
 
 route '/css/*' do
@@ -64,8 +72,13 @@ route '/css/*' do
   end
 end
 
-route '/blog/*' do
-  item.identifier.chop + '.html'
+compile '*' do
+  if item.binary?
+    # don’t filter binary items
+  else
+    filter :erb
+    layout 'default'
+  end
 end
 
 route '*' do
@@ -76,7 +89,7 @@ route '*' do
     item[:content_filename] =~ is_index 
     item.identifier + 'index.html' 
   else 
-   item.identifier.chop + '.html'
+   item.identifier + 'index.html'
   end
 end
 
