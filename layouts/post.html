@@ -1,6 +1,6 @@
 <% render 'blog' do %>
 <article class='post'>
-	<h1><%= item[:title] %></h1>
+	<h1><%= link_to item[:title], item[:link] || item.path, target: "_blank" %></h1>
 	<p class="date"><%= get_pretty_date(item) %></p>
 	<%= yield %>
 </article>
