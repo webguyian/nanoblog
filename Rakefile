@@ -187,6 +187,6 @@ end
   end
 
 desc "Generate the whole site."
-task :generate_all => [:compress_css, :generate, :sitemap]
+task :generate_all => [:compress_css, :generate]
 
-task :build => :generate_all
+task :build => [:generate_all, :sitemap]
